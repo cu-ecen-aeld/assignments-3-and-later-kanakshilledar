@@ -1,20 +1,14 @@
 CC ?= $(CROSS_COMPILE)gcc
-CFLAGS ?= -g -Wall -Werror
-CROSS_COMPILE ?=
-TARGET ?= aesdsocket
-LDFLAGS ?= -lpthread -lrt
+LDFLAGS ?= -lpthread
+CFLAGS ?= -Wall -Werror -O2 -g
+override CFLAGS += -DUSE_AESD_CHAR_DEVICE
 
-default: $(TARGET)
+all: aesdsocket
 
-all: default
+aesdsocket: aesdsocket.c
+	$(CC) $(CFLAGS) aesdsocket.c -o aesdsocket $(LDFLAGS)
 
-aesdsocket: aesdsocket.o
-	$(CC) $(CFLAGS) -o $(TARGET) aesdsocket.o $(LDFLAGS)
-    
-aesdsocket.o: aesdsocket.c
-	$(CC) $(CFLAGS) -c aesdsocket.c -o aesdsocket.o
-    
+.PHONY: clean
+
 clean:
-	rm -f $(TARGET) aesdsocket.o
-
-
+	rm -rf aesdsocket
